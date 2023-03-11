@@ -1,0 +1,15 @@
+<?php
+
+/**
+  * Copyright © Luxodev Indonesia. All Rights Reserved.
+  */
+
+namespace DummyNamespace;
+
+use DummyRootNamespaceHttp\Controllers\Controller;
+use Illuminate\Http\Request;
+
+class DummyClass extends Controller
+{
+    //
+}

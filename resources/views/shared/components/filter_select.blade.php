@@ -1,0 +1,1 @@
+{!! Form::select("filter[$name]", $options , isset($filter[$name]) ? $filter[$name] : '', ['placeholder' => $label, 'class' => 'form-control form-control-sm filter select2']) !!}

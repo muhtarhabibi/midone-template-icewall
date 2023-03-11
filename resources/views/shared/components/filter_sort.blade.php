@@ -1,0 +1,1 @@
+{!! Form::hidden('filter[sort]', isset($filter['sort']) ? $filter['sort'] : null, ['id' => 'sort_value']) !!}

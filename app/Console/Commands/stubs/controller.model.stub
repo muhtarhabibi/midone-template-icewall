@@ -1,0 +1,181 @@
+<?php
+
+/**
+  * Copyright © Luxodev Indonesia. All Rights Reserved.
+  */
+
+namespace DummyNamespace;
+
+use DummyFullModelClass;
+use Illuminate\Http\Request;
+use DummyRootNamespaceHttp\Controllers\Controller;
+use Illuminate\Database\QueryException;
+use DB;
+use Illuminate\Validation\Rule;
+use Auth;
+
+class DummyClass extends Controller
+{
+    /**
+     * Display a listing of the DummyFullModelClass.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
+     */
+    public function index(Request $request)
+    {
+        $DummyModelVariables = DummyModelClass::query();
+        $filter = [];
+        if(isset($request->filter)) {
+            $filter = $request->filter;
+            foreach ($filter as $key => $value) {
+                if(!empty($value)) {
+
+                    if( $key == 'sort') {
+                        $sort = explode('|', $value);
+                        $DummyModelVariables = $DummyModelVariables->orderBy($sort[0], $sort[1]);
+                        continue;
+                    }
+
+                    // if($key == 'dummy') {
+
+                    // } else {
+                        $DummyModelVariables = $DummyModelVariables->where($key, 'like', '%'.$value.'%');
+                    // }
+                }
+            }
+        }
+        $DummyModelVariables = $DummyModelVariables->paginate(50);
+        //
+        return view('DummyViewNamespace.index')
+                    ->with('DummyModelVariables', $DummyModelVariables)
+                    ->with('filter', $filter);
+    }
+
+    /**
+     * Show the form for creating a new DummyFullModelClass.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function create()
+    {
+        $DummyModelVariable = new DummyModelClass;
+        // $DummyModelVariable->active = 1;
+        return view('DummyViewNamespace.form')
+                    ->with('DummyModelVariable', $DummyModelVariable);
+    }
+
+    /**
+     * Store a newly created DummyFullModelClass in storage.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
+     */
+    public function store(Request $request)
+    {
+        // $request->validate([
+        //     'name' => 'required',
+        //     'email' => [
+        //         'required',
+        //         Rule::unique('DummyModelVariables'),
+        //     ],
+        //     'relations' => 'nullable|array'
+        // ]);
+
+        try {
+            DB::beginTransaction();
+                $DummyModelVariable = new DummyModelClass;
+                $DummyModelVariable->fill($request->except([]));
+                // $DummyModelVariable->active = $request->active == 'on';
+                $DummyModelVariable->save();
+                // $DummyModelVariable->relations()->sync($request->relations);
+                //
+            DB::commit();
+            toastr()->success('DummyModelHumanize Created!', 'Congratulations');
+        } catch(QueryException $ex){
+            DB::rollBack();
+            toastr()->error('Failed!', substr($ex->getMessage(), 0, 30));
+        }
+
+        return redirect()->route('DummyViewNamespace.index');
+    }
+
+    /**
+     * Display the specified DummyFullModelClass.
+     *
+     * @param  \DummyFullModelClass  $DummyModelVariable
+     * @return \Illuminate\Http\Response
+     */
+    public function show(DummyModelClass $DummyModelVariable)
+    {
+        //
+        return view('DummyViewNamespace.show')
+                    ->with('DummyModelVariable', $DummyModelVariable);
+    }
+
+    /**
+     * Show the form for editing the specified DummyFullModelClass.
+     *
+     * @param  \DummyFullModelClass  $DummyModelVariable
+     * @return \Illuminate\Http\Response
+     */
+    public function edit(DummyModelClass $DummyModelVariable)
+    {
+        //
+        return view('DummyViewNamespace.form')
+                    ->with('DummyModelVariable', $DummyModelVariable);
+    }
+
+    /**
+     * Update the specified DummyFullModelClass in storage.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param  \DummyFullModelClass  $DummyModelVariable
+     * @return \Illuminate\Http\Response
+     */
+    public function update(Request $request, DummyModelClass $DummyModelVariable)
+    {
+        // $request->validate([
+        //     'name' => 'required',
+        //     'email' => [
+        //         'required',
+        //         Rule::unique('DummyModelVariables')->ignore($DummyModelVariable->id),
+        //     ],
+        //     'relations' => 'nullable|array'
+        // ]);
+
+        try {
+            DB::beginTransaction();
+            $DummyModelVariable->fill($request->except([]));
+            // $DummyModelVariable->active = $request->active == 'on';
+            $DummyModelVariable->save();
+            // $DummyModelVariable->relations()->sync($request->relations);
+            DB::commit();
+            toastr()->success('User Updated!', 'Congratulations');
+        } catch(QueryException $ex){
+            DB::rollBack();
+            toastr()->error('Failed!', substr($ex->getMessage(), 0, 30));
+        }
+
+        return redirect()->route('DummyViewNamespace.index');
+    }
+
+    /**
+     * Remove the specified DummyFullModelClass from storage.
+     *
+     * @param  \DummyFullModelClass  $DummyModelVariable
+     * @return \Illuminate\Http\Response
+     */
+    public function destroy(DummyModelClass $DummyModelVariable, Request $request)
+    {
+        try {
+            //
+            $DummyModelVariable->delete();
+            toastr()->success('User Deleted!', 'Congratulations');
+        } catch(QueryException $ex){
+            toastr()->error('Failed!', substr($ex->getMessage(), 0, 30));
+        }
+
+        return redirect()->route('DummyViewNamespace.index');
+    }
+}

@@ -1,0 +1,16 @@
+<?php
+
+/**
+  * Copyright © Luxodev Indonesia. All Rights Reserved.
+  */
+
+
+namespace DummyNamespace;
+
+use Illuminate\Database\Eloquent\Model;
+// use App\Models\BaseModel as Model;
+
+class DummyClass extends Model
+{
+    //
+}

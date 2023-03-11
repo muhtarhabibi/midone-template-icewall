@@ -1,0 +1,1 @@
+{!! Form::date("filter[$name]", !empty($filter[$name]) ? $filter[$name] : '', ['placeholder' => $label, 'class' => 'form-control form-control-sm filter']) !!}
